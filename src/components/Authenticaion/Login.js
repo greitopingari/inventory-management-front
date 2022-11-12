@@ -1,12 +1,12 @@
-import { useNavigate } from "react-router-dom";
+import { yupResolver } from "@hookform/resolvers/yup";
 import axios from "axios";
 import { useForm } from "react-hook-form";
-import { yupResolver } from "@hookform/resolvers/yup";
+import { useNavigate } from "react-router-dom";
 
-import Form from "../common/Form";
-import { loginSchema } from "../validation/schema";
 import Button from "../common/Button";
+import Form from "../common/Form";
 import Input from "../common/Input";
+import { loginSchema } from "../validation/schema";
 
 const Login = () => {
     const navigate = useNavigate();
@@ -42,7 +42,7 @@ const Login = () => {
         <div className="flex flex-col items-center justify-center h-[100vh] bg-blue-500 text-black">
 
             <div className="w-1/4 overflow-hidden bg-white grid grid-cols items-center rounded-md p-5">
-                <h3 className="text-center uppercase font-medium mt-8">Login</h3>
+                <h3 className="text-center uppercase font-bold mt-8">Login</h3>
                 <Form methods={methods} onSubmit={onSubmit} className="p-5">
                     <Input
                         type="email"
