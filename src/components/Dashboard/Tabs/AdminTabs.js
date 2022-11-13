@@ -1,7 +1,7 @@
-import Categories from '../components/Categories';
-import EmployeesWork from '../components/EmployeesWork';
-import Products from '../components/Products';
-import Roles from '../components/Roles';
+import Categories from '../pages/Categories';
+import EmployeesWork from '../pages/EmployeesWork';
+import Products from '../pages/Products';
+import Roles from '../pages/Roles';
 
 const AdminTabs = [
 	{

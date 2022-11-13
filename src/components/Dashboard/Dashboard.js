@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import LogoutIcon from '../../assets/svgs/logout.png';
+import LogoutIcon from '../../assets/logout.png';
 
 import AdminTabs from './Tabs/AdminTabs';
 
@@ -13,6 +13,7 @@ const Dashboard = () => {
 		setActiveTab(id);
 		localStorage.setItem('ActiveTab', id);
 	};
+
 	const LogOut = () => {
 		localStorage.removeItem('Token');
 		navigate('/login');
@@ -23,6 +24,9 @@ const Dashboard = () => {
 			? setActiveTab(parseInt(localStorage.getItem('ActiveTab')))
 			: setActiveTab(1);
 	});
+
+
+	
 
 	return (
 		<>
@@ -62,8 +66,7 @@ const Dashboard = () => {
 					if (item.id === activeTab) {
 						return (
 							<div key={item.id} className="w-[85%] text-center">
-								{' '}
-								{item.component}{' '}
+								{item.component}
 							</div>
 						);
 					}
