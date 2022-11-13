@@ -21,7 +21,7 @@ const AdminTabs = [
 	},
 	{
 		id: 4,
-		label: "ROLES",
+		label: "Roles",
 		component: <Roles />,
 	},
 ];

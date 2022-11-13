@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import LogoutIcon from '../../assets/svgs/logout.png';
 
@@ -11,11 +11,18 @@ const Dashboard = () => {
 
 	const setTab = (id) => {
 		setActiveTab(id);
+		localStorage.setItem('ActiveTab', id);
 	};
 	const LogOut = () => {
 		localStorage.removeItem('Token');
 		navigate('/login');
 	};
+
+	useEffect(() => {
+		localStorage.getItem('ActiveTab')
+			? setActiveTab(parseInt(localStorage.getItem('ActiveTab')))
+			: setActiveTab(1);
+	});
 
 	return (
 		<>
@@ -48,13 +55,17 @@ const Dashboard = () => {
 							className=" text-white text-left cursor-pointer uppercase font-semibold"
 							type="button"
 							value="Log out"
-							onClick={LogOut}
 						/>
 					</div>
 				</div>
 				{AdminTabs.map((item) => {
 					if (item.id === activeTab) {
-						return <div key={item.id}> {item.component} </div>;
+						return (
+							<div key={item.id} className="w-[85%] text-center">
+								{' '}
+								{item.component}{' '}
+							</div>
+						);
 					}
 				})}
 			</div>
