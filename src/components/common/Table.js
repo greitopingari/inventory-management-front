@@ -1,4 +1,4 @@
-const Table = ({ table_headers, onCreate, table_body, children }) => {
+const Table = ({ table_headers, onCreate, children }) => {
     return (
         <div className="flex flex-col justify-between items-center">
             <div className="ml-auto p-5">

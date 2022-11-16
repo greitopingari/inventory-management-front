@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useEffect, useReducer, useState } from 'react';
 
 import fixDateFormat from '../../../contexts/functions';
 
@@ -8,6 +8,8 @@ import DeleteIcon from '../../../assets/delete.png';
 import Table from '../../common/Table';
 
 const Categories = () => {
+	const [reducerValue, forceUpdate] = useReducer((x) => x + 1, 0);
+
 	const [categories, setCategories] = useState([{}]);
 
 	const headers = {
@@ -27,9 +29,7 @@ const Categories = () => {
 		};
 
 		fetchCategories();
-	}, []);
-
-
+	}, [reducerValue]);
 
 	const createCategory = () => {
 		try {
@@ -37,17 +37,18 @@ const Categories = () => {
 				.post(
 					`${process.env.REACT_APP_BACKEND_API}/Category`,
 					{
-						categoryName: 'Iphone',
+						categoryName: 'Testtt',
 						createdBy: 'admin@MagazineManagment.com',
 					},
 					headers
 				)
-				.then((_) =>
+				.then((_) => {
 					Swal.fire({
 						icon: 'success',
 						title: 'Uploaded Successfully!',
-					})
-				)
+					});
+					forceUpdate();
+				})
 				.catch((e) =>
 					Swal.fire({
 						icon: 'error',
@@ -65,28 +66,31 @@ const Categories = () => {
 	};
 
 	const deleteCategory = async (id) => {
-		await axios
-			.delete(`${process.env.REACT_APP_BACKEND_API}/Category/${id}`, headers)
+		await axios.delete(
+			`${process.env.REACT_APP_BACKEND_API}/Category/${id}`,
+			headers
+		);
+		forceUpdate();
 	};
 
-
-	const table_headers = [{
-		id: 1,
-		header_name: "Category Name"
-	},
-	{
-		id: 2,
-		header_name: "Created on"
-	},
-	{
-		id: 3,
-		header_name: "Created By"
-	},
-	{
-		id:4,
-		header_name: ""
-	}
-	]
+	const table_headers = [
+		{
+			id: 1,
+			header_name: 'Category Name',
+		},
+		{
+			id: 2,
+			header_name: 'Created on',
+		},
+		{
+			id: 3,
+			header_name: 'Created By',
+		},
+		{
+			id: 4,
+			header_name: '',
+		},
+	];
 	return (
 		<Table table_headers={table_headers} onCreate={createCategory}>
 			{categories
