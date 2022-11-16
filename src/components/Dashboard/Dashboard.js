@@ -23,10 +23,10 @@ const Dashboard = () => {
 		localStorage.getItem('ActiveTab')
 			? setActiveTab(parseInt(localStorage.getItem('ActiveTab')))
 			: setActiveTab(1);
-	});
+	}, []);
 
 
-	
+
 
 	return (
 		<>
