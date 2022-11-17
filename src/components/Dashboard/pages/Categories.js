@@ -1,23 +1,25 @@
 import axios from 'axios';
-import { useCallback, useEffect, useReducer, useState } from 'react';
+import { useEffect, useReducer, useState } from 'react';
 
 import fixDateFormat from '../../../contexts/functions';
+import Modal from '../../common/Modal';
 
 import Swal from 'sweetalert2';
 import DeleteIcon from '../../../assets/delete.png';
 import Table from '../../common/Table';
 
+const headers = {
+	headers: {
+		'Content-Type': 'application/json',
+		Authorization: 'Bearer ' + JSON.parse(localStorage.getItem('Token')),
+	},
+};
+
 const Categories = () => {
 	const [reducerValue, forceUpdate] = useReducer((x) => x + 1, 0);
 
 	const [categories, setCategories] = useState([{}]);
-
-	const headers = {
-		headers: {
-			'Content-Type': 'application/json',
-			Authorization: 'Bearer ' + JSON.parse(localStorage.getItem('Token')),
-		},
-	};
+	const [showModal, setShowModal] = useState(false);
 
 	useEffect(() => {
 		const fetchCategories = async () => {
@@ -88,32 +90,34 @@ const Categories = () => {
 		},
 		{
 			id: 4,
-			header_name: '',
+			header_name: 'Actions',
 		},
 	];
 	return (
-		<Table table_headers={table_headers} onCreate={createCategory}>
-			{categories
-				.filter((cat) => cat.isDeleted === false)
-				.map((category, index) => {
-					return (
-						<tr className="border-b border-blue-200" key={index}>
-							<td className="p-5 font-semibold">{category.categoryName}</td>
-							<td className="p-5 font-semibold">
-								{fixDateFormat(category.createdOn)}
-							</td>
-							<td className="p-5 font-semibold">{category.createdBy}</td>
-							<td className="p-5">
-								<img
-									src={DeleteIcon}
-									className="w-[30px] cursor-pointer"
-									onClick={() => deleteCategory(category.id)}
-								/>
-							</td>
-						</tr>
-					);
-				})}
-		</Table>
+		<>
+			<Table table_headers={table_headers} onCreate={createCategory}>
+				{categories
+					.filter((cat) => cat.isDeleted === false)
+					.map((category, index) => {
+						return (
+							<tr className="border-b border-blue-200" key={index}>
+								<td className="p-5 font-semibold">{category.categoryName}</td>
+								<td className="p-5 font-semibold">
+									{fixDateFormat(category.createdOn)}
+								</td>
+								<td className="p-5 font-semibold">{category.createdBy}</td>
+								<td className="p-5">
+									<img
+										src={DeleteIcon}
+										className="w-[30px] cursor-pointer mx-auto"
+										onClick={() => deleteCategory(category.id)}
+									/>
+								</td>
+							</tr>
+						);
+					})}
+			</Table>
+		</>
 	);
 };
 

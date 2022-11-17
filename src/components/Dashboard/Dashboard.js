@@ -15,7 +15,7 @@ const Dashboard = () => {
 	};
 
 	const LogOut = () => {
-		localStorage.removeItem('Token');
+		localStorage.clear();
 		navigate('/login');
 	};
 

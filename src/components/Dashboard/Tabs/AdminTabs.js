@@ -1,5 +1,5 @@
+import ActivateCategories from '../pages/ActivateCategories';
 import Categories from '../pages/Categories';
-import EmployeesWork from '../pages/EmployeesWork';
 import Products from '../pages/Products';
 import Roles from '../pages/Roles';
 
@@ -16,13 +16,13 @@ const AdminTabs = [
 	},
 	{
 		id: 3,
-		label: "Employess Work",
-		component: <EmployeesWork />,
+		label: "Roles",
+		component: <Roles />,
 	},
 	{
 		id: 4,
-		label: "Roles",
-		component: <Roles />,
+		label: "Deactivated Categories",
+		component: <ActivateCategories />,
 	},
 ];
 
