@@ -75,8 +75,5 @@ const CreateProduct = ({updateModal}) => {
 			</Form>
 		</Modal>
 	);
-
-    return (  );
 }
  
-export default CreateProduct;
