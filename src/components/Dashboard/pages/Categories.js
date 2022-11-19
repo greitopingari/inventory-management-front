@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { useEffect, useReducer, useState } from 'react';
+import { useEffect, useState } from 'react';
 
 import fixDateFormat from '../../../contexts/functions';
 import Modal from '../../common/Modal';
@@ -8,63 +8,35 @@ import Swal from 'sweetalert2';
 import DeleteIcon from '../../../assets/delete.png';
 import Table from '../../common/Table';
 
-const headers = {
-	headers: {
-		'Content-Type': 'application/json',
-		Authorization: 'Bearer ' + JSON.parse(localStorage.getItem('Token')),
-	},
-};
+// Cruds
+
+import CreateCategory from '../Cruds/Categories/CreateCategory';
 
 const Categories = () => {
-	const [reducerValue, forceUpdate] = useReducer((x) => x + 1, 0);
-
 	const [categories, setCategories] = useState([{}]);
 	const [showModal, setShowModal] = useState(false);
 
-	useEffect(() => {
-		const fetchCategories = async () => {
-			let response = await axios.get(
-				`${process.env.REACT_APP_BACKEND_API}/Category`,
-				headers
-			);
-			setCategories(response.data);
-		};
+	const headers = {
+		headers: {
+			'Content-Type': 'application/json',
+			Authorization: 'Bearer ' + JSON.parse(localStorage.getItem('Token')),
+		},
+	};
 
+	const fetchCategories = async () => {
+		let response = await axios.get(
+			`${process.env.REACT_APP_BACKEND_API}/Category`,
+			headers
+		);
+		setCategories(response.data);
+	};
+
+	useEffect(() => {
 		fetchCategories();
-	}, [reducerValue]);
+	}, []);
 
 	const createCategory = () => {
-		try {
-			axios
-				.post(
-					`${process.env.REACT_APP_BACKEND_API}/Category`,
-					{
-						categoryName: 'Testtt',
-						createdBy: 'admin@MagazineManagment.com',
-					},
-					headers
-				)
-				.then((_) => {
-					Swal.fire({
-						icon: 'success',
-						title: 'Uploaded Successfully!',
-					});
-					forceUpdate();
-				})
-				.catch((e) =>
-					Swal.fire({
-						icon: 'error',
-						title: 'Oops...',
-						text: e,
-					})
-				);
-		} catch (e) {
-			Swal.fire({
-				icon: 'error',
-				title: 'Oops...',
-				text: e,
-			});
-		}
+		setShowModal(true);
 	};
 
 	const deleteCategory = async (id) => {
@@ -72,7 +44,7 @@ const Categories = () => {
 			`${process.env.REACT_APP_BACKEND_API}/Category/${id}`,
 			headers
 		);
-		forceUpdate();
+		fetchCategories();
 	};
 
 	const table_headers = [
@@ -93,11 +65,12 @@ const Categories = () => {
 			header_name: 'Actions',
 		},
 	];
+
 	return (
 		<>
 			<Table table_headers={table_headers} onCreate={createCategory}>
 				{categories
-					.filter((cat) => cat.isDeleted === false)
+					?.filter((cat) => cat.isDeleted === false)
 					.map((category, index) => {
 						return (
 							<tr className="border-b border-blue-200" key={index}>
@@ -117,6 +90,9 @@ const Categories = () => {
 						);
 					})}
 			</Table>
+			{showModal ? (
+				<CreateCategory update={fetchCategories} updateModal={setShowModal} />
+			) : null}
 		</>
 	);
 };

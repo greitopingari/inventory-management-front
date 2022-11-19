@@ -11,7 +11,8 @@ const registerSchema = yup.object().shape({
     confirm_password: yup.string().oneOf([yup.ref("password"), null], "Passwords must match!"),
 })
 
-export{
+
+export {
     loginSchema,
     registerSchema
-}
+};

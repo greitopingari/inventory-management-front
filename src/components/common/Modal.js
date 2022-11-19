@@ -1,9 +1,14 @@
 import { useState } from 'react';
 
-const Modal = () => {
+const Modal = ({ children, onOutside }) => {
 	const [modal, setModal] = useState(true);
 	const toggleModal = () => {
+		
 		setModal(!modal);
+
+		if (onOutside !== undefined) {
+			onOutside();
+		}
 	};
 
 	if (modal) {
@@ -17,10 +22,7 @@ const Modal = () => {
 			{modal && (
 				<div className="modal">
 					<div className="overlay" onClick={() => toggleModal()}></div>
-					<div className="modal-content">
-						<h2 className="text-center font-md mt-5 text-red">Info</h2>
-						<p className="text-center">Info Text</p>
-					</div>
+					<div className="modal-content">{children}</div>
 				</div>
 			)}
 		</>

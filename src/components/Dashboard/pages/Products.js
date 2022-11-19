@@ -1,47 +1,15 @@
 import axios from 'axios';
-import { useEffect, useReducer, useState } from 'react';
+import { useEffect, useState } from 'react';
 import DeleteIcon from '../../../assets/delete.png';
 import fixDateFormat from '../../../contexts/functions';
 import Table from '../../common/Table';
 
-const table_headers = [
-	{
-		id: 1,
-		header_name: 'Serial Number',
-	},
-	{
-		id: 2,
-		header_name: 'Proudct Name',
-	},
-	{
-		id: 3,
-		header_name: 'Category',
-	},
-	{
-		id: 4,
-		header_name: 'Price',
-	},
-	{
-		id: 5,
-		header_name: 'In Stock',
-	},
-	{
-		id: 6,
-		header_name: 'Posted on',
-	},
-	{
-		id: 7,
-		header_name: 'Image',
-	},
-	{
-		id: 8,
-		header_name: 'Actions',
-	},
-];
-
 const Products = () => {
 	const [products, setProducts] = useState([{}]);
-	const [reducerValue, forceUpdate] = useReducer((x) => x + 1, 0);
+
+	const user_role = JSON.parse(localStorage.getItem('user_info')).role[0];
+
+	// const [showCreateModal, setShowCreateModal] = useState(false); To be updated
 
 	const headers = {
 		headers: {
@@ -58,7 +26,7 @@ const Products = () => {
 
 	useEffect(() => {
 		fetchProducts();
-	}, [reducerValue]);
+	}, []);
 
 	const deleteProdcut = async (id) => {
 		try {
@@ -66,12 +34,47 @@ const Products = () => {
 				`${process.env.REACT_APP_BACKEND_API}/Product/${id}`,
 				headers
 			);
-
-			forceUpdate();
+			fetchProducts();
 		} catch (e) {
 			console.log(e);
 		}
 	};
+
+	const table_headers = [
+		{
+			id: 1,
+			header_name: 'Serial Number',
+		},
+		{
+			id: 2,
+			header_name: 'Proudct Name',
+		},
+		{
+			id: 3,
+			header_name: 'Category',
+		},
+		{
+			id: 4,
+			header_name: 'Price',
+		},
+		{
+			id: 5,
+			header_name: 'In Stock',
+		},
+		{
+			id: 6,
+			header_name: 'Posted on',
+		},
+		{
+			id: 7,
+			header_name: 'Image',
+		},
+		{
+			id: 8,
+			header_name: 'Actions',
+		},
+	];
+
 	return (
 		<>
 			<Table table_headers={table_headers}>
@@ -92,13 +95,17 @@ const Products = () => {
 									alt="loading..."
 								/>
 							</td>
-							<td className="p-5">
-								<img
-									src={DeleteIcon}
-									className="w-[30px] cursor-pointer mx-auto"
-									onClick={() => deleteProdcut(product.id)}
-								/>
-							</td>
+							{user_role === 'Admin' ? (
+								<td className="p-5">
+									<img
+										src={DeleteIcon}
+										className="w-[30px] cursor-pointer mx-auto"
+										onClick={() => deleteProdcut(product.id)}
+									/>
+								</td>
+							) : (
+								<td className="p-5 font-bold">None</td>
+							)}
 						</tr>
 					);
 				})}

@@ -1,13 +1,19 @@
+import axios from 'axios';
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import LogoutIcon from '../../assets/logout.png';
 
 import AdminTabs from './Tabs/AdminTabs';
+import EmployeeTabs from './Tabs/EmployeeTabs';
 
 const Dashboard = () => {
 	const navigate = useNavigate();
 
+	const user_role = JSON.parse(localStorage.getItem('user_info')).role[0];
+
+
 	const [activeTab, setActiveTab] = useState(1);
+
 
 	const setTab = (id) => {
 		setActiveTab(id);
@@ -25,9 +31,6 @@ const Dashboard = () => {
 			: setActiveTab(1);
 	}, []);
 
-
-
-
 	return (
 		<>
 			<div className="flex flex-row flex-wrap">
@@ -35,21 +38,37 @@ const Dashboard = () => {
 					<div className="border-b border-sky-500 text-center">
 						<p className="p-5">Inventory Management</p>
 					</div>
-					{AdminTabs.map((item) => {
-						return (
-							<div
-								className={
-									item.id === activeTab
-										? 'border-b border-sky-500 bg-gray-100 text-black text-center p-5 cursor-pointer transition-all'
-										: 'border-b border-sky-500 text-center p-5 cursor-pointer'
-								}
-								key={item.id}
-								onClick={() => setTab(item.id)}
-							>
-								{item.label}
-							</div>
-						);
-					})}
+					{user_role === 'Admin'
+						? AdminTabs.map((item) => {
+								return (
+									<div
+										className={
+											item.id === activeTab
+												? 'border-b border-sky-500 bg-gray-100 text-black text-center p-5 cursor-pointer transition-all'
+												: 'border-b border-sky-500 text-center p-5 cursor-pointer'
+										}
+										key={item.id}
+										onClick={() => setTab(item.id)}
+									>
+										{item.label}
+									</div>
+								);
+						  })
+						: EmployeeTabs.map((item) => {
+								return (
+									<div
+										className={
+											item.id === activeTab
+												? 'border-b border-sky-500 bg-gray-100 text-black text-center p-5 cursor-pointer transition-all'
+												: 'border-b border-sky-500 text-center p-5 cursor-pointer'
+										}
+										key={item.id}
+										onClick={() => setTab(item.id)}
+									>
+										{item.label}
+									</div>
+								);
+						  })}
 					<div
 						className="flex flex-row items-center justify-between text-center absolute bottom-0 cursor-pointer"
 						onClick={LogOut}
@@ -62,15 +81,25 @@ const Dashboard = () => {
 						/>
 					</div>
 				</div>
-				{AdminTabs.map((item) => {
-					if (item.id === activeTab) {
-						return (
-							<div key={item.id} className="w-[85%] text-center">
-								{item.component}
-							</div>
-						);
-					}
-				})}
+				{user_role === 'Admin'
+					? AdminTabs.map((item) => {
+							if (item.id === activeTab) {
+								return (
+									<div key={item.id} className="w-[85%] text-center">
+										{item.component}
+									</div>
+								);
+							}
+					  })
+					: EmployeeTabs.map((item) => {
+							if (item.id === activeTab) {
+								return (
+									<div key={item.id} className="w-[85%] text-center">
+										{item.component}
+									</div>
+								);
+							}
+					  })}
 			</div>
 		</>
 	);

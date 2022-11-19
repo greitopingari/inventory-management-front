@@ -24,7 +24,6 @@ const Toast = Swal.mixin({
 const Login = () => {
 	const navigate = useNavigate();
 
-	const formData = new FormData();
 
 	const methods = useForm({
 		mode: 'onSubmit',
@@ -35,27 +34,37 @@ const Login = () => {
 	const { errors } = methods;
 
 	const onSubmit = async (data) => {
-		formData.append('email', data.email);
-		formData.append('password', data.password);
-
 		try {
-			const response = await axios.post(
-				`${process.env.REACT_APP_BACKEND_API}/Login`,
-				formData,
-				{
-					headers: { 'Content-Type': 'multipart/form-data' },
-				}
-			);
-			localStorage.setItem('Token', JSON.stringify(response.data));
-			navigate('/');
+			await axios
+				.post(
+					`${process.env.REACT_APP_BACKEND_API}/Login`,
+					{
+						email: data.email,
+						password: data.password,
+					},
+					{
+						headers: { 'Content-Type': 'multipart/form-data' },
+					}
+				)
+				.then((response) => {
+					localStorage.setItem('Token', JSON.stringify(response.data.item1));
+					localStorage.setItem('user_info', JSON.stringify(response.data.item2));
+					navigate('/');
 
-			Toast.fire({
-				icon: 'success',
-				iconColor: '#3B82F6',
-				title: 'Logged in successfully!',
-			});
+					Toast.fire({
+						icon: 'success',
+						iconColor: '#3B82F6',
+						title: 'Logged in successfully!',
+					});
+				})
+				.catch((e) => {
+					Toast.fire({
+						icon: 'error',
+						title: e.response.data,
+					});
+				});
 		} catch (e) {
-			console.log(e);
+			console.error(e);
 		}
 	};
 	return (

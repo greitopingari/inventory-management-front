@@ -40,6 +40,7 @@ const Roles = () => {
 	const deleteRole = (id) => {
 		console.log('Role', id);
 	};
+	
 	useEffect(() => {
 		fetchRoles();
 	}, []);
@@ -47,7 +48,7 @@ const Roles = () => {
 	return (
 		<>
 			<Table table_headers={table_headers} onCreate={() => setShowModal(true)}>
-				{roles.map((role, index) => {
+				{roles?.map((role, index) => {
 					return (
 						<tr
 							className="border-b border-blue-200 justify-between"

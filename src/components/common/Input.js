@@ -31,7 +31,7 @@ export default function Input({
                     {label} {required ? " *" : ""}
                 </label>
             </div>
-            <p className=" text-red">{error}</p>
+            <p className="text-red">{error}</p>
 
         </>
     );

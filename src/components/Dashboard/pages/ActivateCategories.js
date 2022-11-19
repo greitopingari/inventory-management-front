@@ -3,20 +3,21 @@ import { useEffect, useState } from 'react';
 import DeleteIcon from '../../../assets/delete.png';
 import Table from '../../common/Table';
 
-const headers = {
-	headers: {
-		'Content-Type': 'application/json',
-		Authorization: 'Bearer ' + JSON.parse(localStorage.getItem('Token')),
-	},
-};
-
 const ActivateCategories = () => {
+	const headers = {
+		headers: {
+			'Content-Type': 'application/json',
+			Authorization: 'Bearer ' + JSON.parse(localStorage.getItem('Token')),
+		},
+	};
 	const [categories, setCategories] = useState([{}]);
+
 	const fetchCategories = async () => {
 		await axios
 			.get(`${process.env.REACT_APP_BACKEND_API}/Category`, headers)
 			.then((res) => setCategories(res.data));
 	};
+	
 	useEffect(() => {
 		fetchCategories();
 	}, []);
