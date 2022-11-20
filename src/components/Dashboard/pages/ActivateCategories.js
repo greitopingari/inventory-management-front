@@ -1,9 +1,11 @@
 import axios from 'axios';
 import { useEffect, useState } from 'react';
 import DeleteIcon from '../../../assets/delete.png';
+import { useData } from '../../../contexts/DataContext';
 import Table from '../../common/Table';
 
 const ActivateCategories = () => {
+	const { setLoadingStatus } = useData();
 	const headers = {
 		headers: {
 			'Content-Type': 'application/json',
@@ -13,11 +15,15 @@ const ActivateCategories = () => {
 	const [categories, setCategories] = useState([{}]);
 
 	const fetchCategories = async () => {
+		setLoadingStatus(true);
 		await axios
 			.get(`${process.env.REACT_APP_BACKEND_API}/Category`, headers)
-			.then((res) => setCategories(res.data));
+			.then((res) => {
+				setCategories(res.data);
+				setLoadingStatus(false);
+			});
 	};
-	
+
 	useEffect(() => {
 		fetchCategories();
 	}, []);

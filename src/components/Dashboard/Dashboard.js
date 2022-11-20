@@ -6,14 +6,17 @@ import LogoutIcon from '../../assets/logout.png';
 import AdminTabs from './Tabs/AdminTabs';
 import EmployeeTabs from './Tabs/EmployeeTabs';
 
+import { useData } from '../../contexts/DataContext';
+import Loading from '../common/Loading';
+
 const Dashboard = () => {
 	const navigate = useNavigate();
 
 	const user_role = JSON.parse(localStorage.getItem('user_info')).role[0];
 
+	const { loadingStatus } = useData();
 
 	const [activeTab, setActiveTab] = useState(1);
-
 
 	const setTab = (id) => {
 		setActiveTab(id);
@@ -101,6 +104,7 @@ const Dashboard = () => {
 							}
 					  })}
 			</div>
+			{loadingStatus ? <Loading /> : null}
 		</>
 	);
 };

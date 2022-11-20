@@ -6,9 +6,11 @@ import { useForm } from 'react-hook-form';
 import { registerSchema } from '../validation/schema';
 
 import Swal from 'sweetalert2';
+import { useData } from '../../contexts/DataContext';
 import Button from '../common/Button';
 import Form from '../common/Form';
 import Input from '../common/Input';
+import Loading from '../common/Loading';
 
 const Toast = Swal.mixin({
 	toast: true,
@@ -24,7 +26,7 @@ const Toast = Swal.mixin({
 
 const Register = () => {
 	const navigate = useNavigate();
-
+	const { loadingStatus, setLoadingStatus } = useData();
 	const methods = useForm({
 		mode: 'onSubmit',
 		reValidateMode: 'onChange',
@@ -33,6 +35,7 @@ const Register = () => {
 	const { errors } = methods;
 
 	const onSubmit = async (data) => {
+		setLoadingStatus(true);
 		try {
 			await axios
 				.post(
@@ -53,7 +56,7 @@ const Register = () => {
 						JSON.stringify(response.data.item2)
 					);
 					navigate('/');
-
+					setLoadingStatus(false);
 					Toast.fire({
 						icon: 'success',
 						iconColor: '#3B82F6',
@@ -61,6 +64,7 @@ const Register = () => {
 					});
 				})
 				.catch((e) => {
+					setLoadingStatus(false)
 					Swal.fire({
 						icon: 'error',
 						title: 'Something Went Wrong, please check all the fields!',
@@ -113,6 +117,7 @@ const Register = () => {
 						</span>{' '}
 					</p>
 				</Form>
+				{loadingStatus ? <Loading /> : null}
 			</div>
 		</div>
 	);

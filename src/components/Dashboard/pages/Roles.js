@@ -6,7 +6,10 @@ import Table from '../../common/Table';
 
 import Modal from '../../common/Modal';
 
+import { useData } from '../../../contexts/DataContext';
+
 const Roles = () => {
+	const { setLoadingStatus } = useData();
 	const table_headers = [
 		{
 			id: 1,
@@ -33,14 +36,18 @@ const Roles = () => {
 	};
 
 	const fetchRoles = async () => {
+		setLoadingStatus(true);
 		await axios
 			.get(`${process.env.REACT_APP_BACKEND_API}/Profile`, headers)
-			.then((res) => setRoles(res.data));
+			.then((res) => {
+				setRoles(res.data);
+				setLoadingStatus(false);
+			});
 	};
 	const deleteRole = (id) => {
 		console.log('Role', id);
 	};
-	
+
 	useEffect(() => {
 		fetchRoles();
 	}, []);

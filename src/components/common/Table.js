@@ -1,7 +1,9 @@
 const Table = ({ table_headers, onCreate, children }) => {
+	const user_role = JSON.parse(localStorage.getItem('user_info')).role[0];
+
 	return (
 		<div className="flex flex-col justify-between items-center">
-			{onCreate !== undefined ? (
+			{onCreate !== undefined && user_role === 'Admin' ? (
 				<div className="ml-auto p-5">
 					<p
 						onClick={() => onCreate()}
