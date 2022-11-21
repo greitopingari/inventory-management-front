@@ -7,6 +7,8 @@ import Form from '../../../common/Form';
 import Input from '../../../common/Input';
 import Modal from '../../../common/Modal';
 
+import { convertImageToBase64 } from '../../../../contexts/functions';
+
 const CreateProduct = ({ update, updateModal }) => {
 	const user_email = JSON.parse(localStorage.getItem('user_info')).email;
 	const [image64, setImage64] = useState(null);
@@ -26,16 +28,16 @@ const CreateProduct = ({ update, updateModal }) => {
 		},
 	};
 
-	const convertImageToBase64 = (e) => {
-		const file = e.target.files[0];
-		const file_reader = new FileReader();
+	// const convertImageToBase64 = (e) => {
+	// 	const file = e.target.files[0];
+	// 	const file_reader = new FileReader();
 
-		file_reader.onloadend = () => {
-			setImage64(file_reader.result.toString());
-		};
+	// 	file_reader.onloadend = () => {
+	// 		setImage64(file_reader.result.toString());
+	// 	};
 
-		file_reader.readAsDataURL(file);
-	};
+	// 	file_reader.readAsDataURL(file);
+	// };
 
 	useEffect(() => {
 		getCategories();
@@ -186,7 +188,7 @@ const CreateProduct = ({ update, updateModal }) => {
 					<input
 						type="file"
 						className="mb-5"
-						onChange={(e) => convertImageToBase64(e)}
+						onChange={(e) => convertImageToBase64(e, setImage64)}
 						required
 					/>
 					{image64 ? <img src={image64} /> : null}

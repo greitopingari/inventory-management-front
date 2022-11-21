@@ -1,11 +1,15 @@
 import axios from 'axios';
 import { useEffect, useState } from 'react';
+//Icons
+
 import DeleteIcon from '../../../assets/delete.png';
+import updateIcon from '../../../assets/update.png';
 import { useData } from '../../../contexts/DataContext';
 import fixDateFormat from '../../../contexts/functions';
 import Table from '../../common/Table';
 
 import CreateProduct from '../Cruds/Product/CreateProduct';
+import UpdateProduct from '../Cruds/Product/UpdateProduct';
 
 const Products = () => {
 	const [products, setProducts] = useState([{}]);
@@ -14,6 +18,9 @@ const Products = () => {
 
 	const { setLoadingStatus } = useData();
 	const [showCreateModal, setShowCreateModal] = useState(false);
+	const [showUpdateModal, setShowUpdateModal] = useState(false);
+
+	const [selectedProductId, setSelectedProductId] = useState(null);
 
 	const headers = {
 		headers: {
@@ -35,6 +42,11 @@ const Products = () => {
 	useEffect(() => {
 		fetchProducts();
 	}, []);
+
+	const updateProduct = (id) => {
+		setSelectedProductId(id);
+		setShowUpdateModal(true);
+	};
 
 	const createProduct = () => {
 		setShowCreateModal(true);
@@ -87,6 +99,7 @@ const Products = () => {
 			header_name: 'Actions',
 		},
 	];
+
 	return (
 		<>
 			<Table table_headers={table_headers} onCreate={createProduct}>
@@ -96,7 +109,9 @@ const Products = () => {
 							<td className="p-3 font-semibold">{product.serialNumber}</td>
 							<td className="p-3 font-semibold">{product.productName}</td>
 							<td className="p-3 font-semibold">{product.categoryName}</td>
-							<td className="p-3 font-semibold">{product.price} {product.currencyType}</td>
+							<td className="p-3 font-semibold">
+								{product.price} {product.currencyType}
+							</td>
 							<td className="p-3 font-semibold">{product.productInStock}</td>
 							<td className="p-3 font-semibold">
 								{fixDateFormat(product.createdOn)}
@@ -105,11 +120,16 @@ const Products = () => {
 								<img src={product.image} alt="loading..." />
 							</td>
 							{user_role === 'Admin' ? (
-								<td className="p-5">
+								<td className="p-5 flex flex-row justify-center items-center">
 									<img
 										src={DeleteIcon}
-										className="w-[30px] cursor-pointer mx-auto"
+										className="w-[30px] cursor-pointer"
 										onClick={() => deleteProdcut(product.id)}
+									/>
+									<img
+										src={updateIcon}
+										className="w-[30px] cursor-pointer"
+										onClick={() => updateProduct(product.id)}
 									/>
 								</td>
 							) : (
@@ -123,6 +143,12 @@ const Products = () => {
 				<CreateProduct
 					update={fetchProducts}
 					updateModal={setShowCreateModal}
+				/>
+			) : null}
+			{showUpdateModal ? (
+				<UpdateProduct
+					product_id={selectedProductId}
+					updateModal={setShowUpdateModal}
 				/>
 			) : null}
 		</>
