@@ -1,5 +1,5 @@
 const Table = ({ table_headers, onCreate, children }) => {
-	const user_role = JSON.parse(localStorage.getItem('user_info')).role[0];
+	const user_role = JSON.parse(sessionStorage.getItem('user_info')).role[0];
 
 	return (
 		<div className="flex flex-col justify-between items-center">

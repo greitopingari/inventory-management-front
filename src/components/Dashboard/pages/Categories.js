@@ -22,7 +22,7 @@ const Categories = () => {
 	const headers = {
 		headers: {
 			'Content-Type': 'application/json',
-			Authorization: 'Bearer ' + JSON.parse(localStorage.getItem('Token')),
+			Authorization: 'Bearer ' + JSON.parse(sessionStorage.getItem('Token')),
 		},
 	};
 
@@ -52,13 +52,12 @@ const Categories = () => {
 
 	const deleteCategory = async (id) => {
 		setLoadingStatus(true);
-		await axios.delete(
-			`${process.env.REACT_APP_BACKEND_API}/Category/${id}`,
-			headers
-		).then((_) => {
-			fetchCategories();
-			setLoadingStatus(false);
-		});
+		await axios
+			.delete(`${process.env.REACT_APP_BACKEND_API}/Category/${id}`, headers)
+			.then((_) => {
+				fetchCategories();
+				setLoadingStatus(false);
+			});
 	};
 
 	const table_headers = [
@@ -96,6 +95,7 @@ const Categories = () => {
 								<td className="p-5">
 									<img
 										src={DeleteIcon}
+										alt=""
 										className="w-[30px] cursor-pointer mx-auto"
 										onClick={() => deleteCategory(category.id)}
 									/>

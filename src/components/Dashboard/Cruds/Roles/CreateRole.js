@@ -1,15 +1,15 @@
 import axios from 'axios';
 import { useForm } from 'react-hook-form';
-
 import Swal from 'sweetalert2';
+
 import Button from '../../../common/Button';
 import Form from '../../../common/Form';
 import Input from '../../../common/Input';
-import Modal from './../../../common/Modal';
+import Modal from '../../../common/Modal';
+import { useData } from './../../../../contexts/DataContext';
 
-const CreateCategory = ({ update, updateModal }) => {
-	const user_email = JSON.parse(sessionStorage.getItem('user_info')).email;
-
+const CreateRole = ({ updateModal, updateRoles }) => {
+	const { setLoadingStatus } = useData();
 	const headers = {
 		headers: {
 			'Content-Type': 'application/json',
@@ -17,14 +17,14 @@ const CreateCategory = ({ update, updateModal }) => {
 		},
 	};
 
-	const createCategory = (data) => {
+	const createNewRole = async (data) => {
+		setLoadingStatus(true);
 		try {
 			axios
 				.post(
-					`${process.env.REACT_APP_BACKEND_API}/Category`,
+					`${process.env.REACT_APP_BACKEND_API}/Profile`,
 					{
-						categoryName: data.category_name,
-						createdBy: user_email,
+						roleName: data.role_name,
 					},
 					headers
 				)
@@ -33,22 +33,20 @@ const CreateCategory = ({ update, updateModal }) => {
 						icon: 'success',
 						title: 'Uploaded Successfully!',
 					});
-					update();
+
+					updateRoles();
 					updateModal(false);
 				})
 				.catch((e) => {
 					Swal.fire({
 						icon: 'error',
 						title: 'Oops...',
-						text: e.response.data.CategoryName,
+						text: 'Something went wrong please try again!',
 					});
 				});
+			setLoadingStatus(false);
 		} catch (e) {
-			Swal.fire({
-				icon: 'error',
-				title: 'Oops...',
-				text: e,
-			});
+			console.error(e);
 		}
 	};
 
@@ -59,17 +57,17 @@ const CreateCategory = ({ update, updateModal }) => {
 
 	return (
 		<Modal onOutside={() => updateModal(false)}>
-			<p className="text-center font-bold mb-5">Create Category</p>
+			<p className="text-center font-bold mb-5">Create new Role</p>
 			<Form
 				methods={methods}
-				onSubmit={createCategory}
+				onSubmit={createNewRole}
 				className="w-1/2 pt-5 text-left"
 			>
 				<Input
 					type="text"
-					name="category_name"
-					id="category_name"
-					label="Enter Category Name"
+					name="role_name"
+					id="role_name"
+					label="Enter Role Name"
 					required={true}
 				/>
 				<Button title={'Create'} />
@@ -78,4 +76,4 @@ const CreateCategory = ({ update, updateModal }) => {
 	);
 };
 
-export default CreateCategory;
+export default CreateRole;

@@ -10,7 +10,7 @@ import Modal from '../../../common/Modal';
 import { convertImageToBase64 } from '../../../../contexts/functions';
 
 const CreateProduct = ({ update, updateModal }) => {
-	const user_email = JSON.parse(localStorage.getItem('user_info')).email;
+	const user_email = JSON.parse(sessionStorage.getItem('user_info')).email;
 	const [image64, setImage64] = useState(null);
 	const [categories, setCategories] = useState([]);
 	const [selectedCategory, setSelectedCategory] = useState('');
@@ -24,7 +24,7 @@ const CreateProduct = ({ update, updateModal }) => {
 	const headers = {
 		headers: {
 			'Content-Type': 'application/json',
-			Authorization: 'Bearer ' + JSON.parse(localStorage.getItem('Token')),
+			Authorization: 'Bearer ' + JSON.parse(sessionStorage.getItem('Token')),
 		},
 	};
 
@@ -191,7 +191,7 @@ const CreateProduct = ({ update, updateModal }) => {
 						onChange={(e) => convertImageToBase64(e, setImage64)}
 						required
 					/>
-					{image64 ? <img src={image64} /> : null}
+					{image64 ? <img src={image64} alt="" /> : null}
 				</div>
 
 				<Button title={'Create'} />

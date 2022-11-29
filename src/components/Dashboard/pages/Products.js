@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 //Icons
 
 import DeleteIcon from '../../../assets/delete.png';
@@ -14,7 +14,7 @@ import UpdateProduct from '../Cruds/Product/UpdateProduct';
 const Products = () => {
 	const [products, setProducts] = useState([{}]);
 
-	const user_role = JSON.parse(localStorage.getItem('user_info')).role[0];
+	const user_role = JSON.parse(sessionStorage.getItem('user_info')).role[0];
 
 	const { setLoadingStatus } = useData();
 	const [showCreateModal, setShowCreateModal] = useState(false);
@@ -25,7 +25,7 @@ const Products = () => {
 	const headers = {
 		headers: {
 			'Content-Type': 'application/json',
-			Authorization: 'Bearer ' + JSON.parse(localStorage.getItem('Token')),
+			Authorization: 'Bearer ' + JSON.parse(sessionStorage.getItem('Token')),
 		},
 	};
 
@@ -120,20 +120,34 @@ const Products = () => {
 								<img src={product.image} alt="loading..." />
 							</td>
 							{user_role === 'Admin' ? (
-								<td className="p-5 flex flex-row justify-center items-center">
-									<img
-										src={DeleteIcon}
-										className="w-[30px] cursor-pointer"
-										onClick={() => deleteProdcut(product.id)}
-									/>
-									<img
-										src={updateIcon}
-										className="w-[30px] cursor-pointer"
-										onClick={() => updateProduct(product.id)}
-									/>
+								<td className="p-5">
+									<div className="flex flex-row justify-between">
+										<img
+											src={updateIcon}
+											alt=""
+											className="w-[30px] cursor-pointer"
+											onClick={() => updateProduct(product.id)}
+										/>
+
+										<img
+											src={DeleteIcon}
+											alt=""
+											className="w-[30px] cursor-pointer"
+											onClick={() => deleteProdcut(product.id)}
+										/>
+									</div>
 								</td>
 							) : (
-								<td className="p-5 font-bold">None</td>
+								<td className="p-5 font-bold">
+									<div className="flex flex-row justify-between">
+										<img
+											src={updateIcon}
+											alt=""
+											className="w-[30px] cursor-pointer"
+											onClick={() => updateProduct(product.id)}
+										/>
+									</div>
+								</td>
 							)}
 						</tr>
 					);
@@ -147,8 +161,10 @@ const Products = () => {
 			) : null}
 			{showUpdateModal ? (
 				<UpdateProduct
-					product_id={selectedProductId}
+					update={fetchProducts}
 					updateModal={setShowUpdateModal}
+					product_id={selectedProductId}
+					user_role={user_role}
 				/>
 			) : null}
 		</>

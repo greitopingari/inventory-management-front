@@ -12,7 +12,7 @@ import Loading from '../common/Loading';
 const Dashboard = () => {
 	const navigate = useNavigate();
 
-	const user_role = JSON.parse(localStorage.getItem('user_info')).role[0];
+	const user_role = JSON.parse(sessionStorage.getItem('user_info')).role[0];
 
 	const { loadingStatus } = useData();
 
@@ -20,17 +20,17 @@ const Dashboard = () => {
 
 	const setTab = (id) => {
 		setActiveTab(id);
-		localStorage.setItem('ActiveTab', id);
+		sessionStorage.setItem('ActiveTab', id);
 	};
 
 	const LogOut = () => {
-		localStorage.clear();
+		sessionStorage.clear();
 		navigate('/login');
 	};
 
 	useEffect(() => {
-		localStorage.getItem('ActiveTab')
-			? setActiveTab(parseInt(localStorage.getItem('ActiveTab')))
+		sessionStorage.getItem('ActiveTab')
+			? setActiveTab(parseInt(sessionStorage.getItem('ActiveTab')))
 			: setActiveTab(1);
 	}, []);
 

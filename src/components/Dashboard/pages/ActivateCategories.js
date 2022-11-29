@@ -5,12 +5,12 @@ import { useData } from '../../../contexts/DataContext';
 import Table from '../../common/Table';
 
 const ActivateCategories = () => {
-	const user = JSON.parse(localStorage.getItem('user_info'));
+	const user = JSON.parse(sessionStorage.getItem('user_info'));
 	const { setLoadingStatus } = useData();
 	const headers = {
 		headers: {
 			'Content-Type': 'application/json',
-			Authorization: 'Bearer ' + JSON.parse(localStorage.getItem('Token')),
+			Authorization: 'Bearer ' + JSON.parse(sessionStorage.getItem('Token')),
 		},
 	};
 	const [categories, setCategories] = useState([{}]);
@@ -65,6 +65,7 @@ const ActivateCategories = () => {
 								<td className="p-5">
 									<img
 										src={updateIcon}
+										alt=""
 										className="w-[30px] cursor-pointer mx-auto"
 										onClick={() => activateCategory(category.id)}
 									/>

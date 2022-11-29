@@ -51,8 +51,8 @@ const Login = () => {
 					}
 				)
 				.then((response) => {
-					localStorage.setItem('Token', JSON.stringify(response.data.item1));
-					localStorage.setItem(
+					sessionStorage.setItem('Token', JSON.stringify(response.data.item1));
+					sessionStorage.setItem(
 						'user_info',
 						JSON.stringify(response.data.item2)
 					);
@@ -65,6 +65,7 @@ const Login = () => {
 					});
 				})
 				.catch((e) => {
+					setLoadingStatus(false);
 					Toast.fire({
 						icon: 'error',
 						title: e.response.data,
