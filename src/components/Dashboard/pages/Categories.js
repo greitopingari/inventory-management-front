@@ -1,5 +1,6 @@
 import axios from 'axios';
 import { useEffect, useState } from 'react';
+import { useData } from '../../../contexts/DataContext';
 
 import fixDateFormat from '../../../contexts/functions';
 import Modal from '../../common/Modal';
@@ -16,19 +17,29 @@ const Categories = () => {
 	const [categories, setCategories] = useState([{}]);
 	const [showModal, setShowModal] = useState(false);
 
+	const { setLoadingStatus } = useData();
+
 	const headers = {
 		headers: {
 			'Content-Type': 'application/json',
-			Authorization: 'Bearer ' + JSON.parse(localStorage.getItem('Token')),
+			Authorization: 'Bearer ' + JSON.parse(sessionStorage.getItem('Token')),
 		},
 	};
 
 	const fetchCategories = async () => {
-		let response = await axios.get(
-			`${process.env.REACT_APP_BACKEND_API}/Category`,
-			headers
-		);
-		setCategories(response.data);
+		setLoadingStatus(true);
+		await axios
+			.get(`${process.env.REACT_APP_BACKEND_API}/Category`, headers)
+			.then((response) => {
+				setCategories(response.data);
+				setLoadingStatus(false);
+			})
+			.catch((e) => {
+				Swal.fire({
+					icon: 'error',
+					title: e,
+				});
+			});
 	};
 
 	useEffect(() => {
@@ -40,11 +51,13 @@ const Categories = () => {
 	};
 
 	const deleteCategory = async (id) => {
-		await axios.delete(
-			`${process.env.REACT_APP_BACKEND_API}/Category/${id}`,
-			headers
-		);
-		fetchCategories();
+		setLoadingStatus(true);
+		await axios
+			.delete(`${process.env.REACT_APP_BACKEND_API}/Category/${id}`, headers)
+			.then((_) => {
+				fetchCategories();
+				setLoadingStatus(false);
+			});
 	};
 
 	const table_headers = [
@@ -82,6 +95,7 @@ const Categories = () => {
 								<td className="p-5">
 									<img
 										src={DeleteIcon}
+										alt=""
 										className="w-[30px] cursor-pointer mx-auto"
 										onClick={() => deleteCategory(category.id)}
 									/>

@@ -4,9 +4,11 @@ import { useForm } from 'react-hook-form';
 import { useNavigate } from 'react-router-dom';
 
 import Swal from 'sweetalert2';
+import { useData } from '../../contexts/DataContext';
 import Button from '../common/Button';
 import Form from '../common/Form';
 import Input from '../common/Input';
+import Loading from '../common/Loading';
 import { loginSchema } from '../validation/schema';
 
 const Toast = Swal.mixin({
@@ -24,6 +26,7 @@ const Toast = Swal.mixin({
 const Login = () => {
 	const navigate = useNavigate();
 
+	const { loadingStatus, setLoadingStatus } = useData();
 
 	const methods = useForm({
 		mode: 'onSubmit',
@@ -34,6 +37,7 @@ const Login = () => {
 	const { errors } = methods;
 
 	const onSubmit = async (data) => {
+		setLoadingStatus(true);
 		try {
 			await axios
 				.post(
@@ -47,10 +51,13 @@ const Login = () => {
 					}
 				)
 				.then((response) => {
-					localStorage.setItem('Token', JSON.stringify(response.data.item1));
-					localStorage.setItem('user_info', JSON.stringify(response.data.item2));
+					sessionStorage.setItem('Token', JSON.stringify(response.data.item1));
+					sessionStorage.setItem(
+						'user_info',
+						JSON.stringify(response.data.item2)
+					);
 					navigate('/');
-
+					setLoadingStatus(false);
 					Toast.fire({
 						icon: 'success',
 						iconColor: '#3B82F6',
@@ -58,6 +65,7 @@ const Login = () => {
 					});
 				})
 				.catch((e) => {
+					setLoadingStatus(false);
 					Toast.fire({
 						icon: 'error',
 						title: e.response.data,
@@ -100,6 +108,7 @@ const Login = () => {
 					</p>
 				</Form>
 			</div>
+			{loadingStatus ? <Loading /> : null}
 		</div>
 	);
 };

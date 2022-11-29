@@ -6,7 +6,12 @@ import Table from '../../common/Table';
 
 import Modal from '../../common/Modal';
 
+import { useData } from '../../../contexts/DataContext';
+
+import CreateRole from './../Cruds/Roles/CreateRole';
+
 const Roles = () => {
+	const { setLoadingStatus } = useData();
 	const table_headers = [
 		{
 			id: 1,
@@ -28,19 +33,34 @@ const Roles = () => {
 	const headers = {
 		headers: {
 			'Content-Type': 'application/json',
-			Authorization: 'Bearer ' + JSON.parse(localStorage.getItem('Token')),
+			Authorization: 'Bearer ' + JSON.parse(sessionStorage.getItem('Token')),
 		},
 	};
 
 	const fetchRoles = async () => {
+		setLoadingStatus(true);
 		await axios
 			.get(`${process.env.REACT_APP_BACKEND_API}/Profile`, headers)
-			.then((res) => setRoles(res.data));
+			.then((res) => {
+				setRoles(res.data);
+				setLoadingStatus(false);
+			});
 	};
-	const deleteRole = (id) => {
-		console.log('Role', id);
+	const deleteRole = async (id, name) => {
+		await axios
+			.delete(
+				`${process.env.REACT_APP_BACKEND_API}/Profile/${id}`,
+				{
+					roleId: id,
+					roleName: name,
+				},
+				headers
+			)
+			.then((_) => {
+				setRoles([...roles]);
+			});
 	};
-	
+
 	useEffect(() => {
 		fetchRoles();
 	}, []);
@@ -59,15 +79,18 @@ const Roles = () => {
 							<td className="p-5">
 								<img
 									src={DeleteIcon}
+									alt=""
 									className="cursor-pointer w-[30px] mx-auto"
-									onClick={() => deleteRole(role.roleId)}
+									onClick={() => deleteRole(role.roleId, role.roleName)}
 								/>
 							</td>
 						</tr>
 					);
 				})}
 			</Table>
-			{showModal ? <Modal /> : null}
+			{showModal ? (
+				<CreateRole updateModal={setShowModal} updateRoles={fetchRoles} />
+			) : null}
 		</>
 	);
 };

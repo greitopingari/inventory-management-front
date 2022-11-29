@@ -1,23 +1,30 @@
 import axios from 'axios';
 import { useEffect, useState } from 'react';
-import DeleteIcon from '../../../assets/delete.png';
+import updateIcon from '../../../assets/update.png';
+import { useData } from '../../../contexts/DataContext';
 import Table from '../../common/Table';
 
 const ActivateCategories = () => {
+	const user = JSON.parse(sessionStorage.getItem('user_info'));
+	const { setLoadingStatus } = useData();
 	const headers = {
 		headers: {
 			'Content-Type': 'application/json',
-			Authorization: 'Bearer ' + JSON.parse(localStorage.getItem('Token')),
+			Authorization: 'Bearer ' + JSON.parse(sessionStorage.getItem('Token')),
 		},
 	};
 	const [categories, setCategories] = useState([{}]);
 
 	const fetchCategories = async () => {
+		setLoadingStatus(true);
 		await axios
 			.get(`${process.env.REACT_APP_BACKEND_API}/Category`, headers)
-			.then((res) => setCategories(res.data));
+			.then((res) => {
+				setCategories(res.data);
+				setLoadingStatus(false);
+			});
 	};
-	
+
 	useEffect(() => {
 		fetchCategories();
 	}, []);
@@ -33,6 +40,19 @@ const ActivateCategories = () => {
 		},
 	];
 
+	const activateCategory = async (cat_id) => {
+		setLoadingStatus(true);
+		await axios
+			.get(
+				`${process.env.REACT_APP_BACKEND_API}/Category/ActivateCategory/${cat_id}`,
+				headers
+			)
+			.then(() => {
+				fetchCategories();
+				setLoadingStatus(false);
+			});
+	};
+
 	return (
 		<>
 			<Table table_headers={table_headers}>
@@ -44,8 +64,10 @@ const ActivateCategories = () => {
 								<td className="p-5 font-semibold">{category.categoryName}</td>
 								<td className="p-5">
 									<img
-										src={DeleteIcon}
+										src={updateIcon}
+										alt=""
 										className="w-[30px] cursor-pointer mx-auto"
+										onClick={() => activateCategory(category.id)}
 									/>
 								</td>
 							</tr>

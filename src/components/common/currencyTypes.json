@@ -1,0 +1,15 @@
+[
+    {
+
+        "value": "Euro",
+        "short_value":"€"
+    },
+    {
+        "value": "Dollar",
+        "short_value":"$"
+    },
+    {
+        "value": "ALL",
+        "short_value": "L"
+    }
+]

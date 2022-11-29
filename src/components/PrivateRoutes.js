@@ -1,8 +1,8 @@
-import { Outlet, Navigate } from 'react-router-dom';
+import { Navigate, Outlet } from 'react-router-dom';
 
 const PrivateRoutes = () => {
     return (
-        localStorage.Token ? <Outlet /> : <Navigate to='login'/>
+        sessionStorage.Token ? <Outlet /> : <Navigate to='login'/>
     );
 }
 
